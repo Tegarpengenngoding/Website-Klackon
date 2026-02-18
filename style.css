@@ -1,0 +1,134 @@
+/* Custom Noise Texture */
+.bg-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Marquee Animation */
+/* Marquee Animation */
+@keyframes marquee-scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-marquee-scroll {
+    animation: marquee-scroll 25s linear infinite;
+    display: flex;
+    min-width: max-content;
+    /* Ensure it takes full width of content */
+}
+
+/* Diagonal Stripe Animation for Marquee Background */
+.bg-stripes {
+    background-image: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(0, 0, 0, 0.1) 10px,
+            rgba(0, 0, 0, 0.1) 20px);
+}
+
+/* Halftone Pattern */
+.bg-halftone {
+    background-color: transparent;
+    background-image: radial-gradient(rgba(51, 85, 230, 0.1) 2px, transparent 1px);
+    /* Blue dots with 20% opacity */
+    background-size: 20px 20px;
+}
+
+/* Floating Animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Typing Animation */
+@keyframes typing-sequence {
+    0% {
+        width: 0;
+    }
+
+    5% {
+        width: 100%;
+    }
+
+    /* Finishes typing in ~1.8s (36s * 5%) */
+    90% {
+        width: 100%;
+        border-right-color: transparent;
+    }
+
+    /* Stay visible */
+    100% {
+        width: 0;
+        border-right-color: transparent;
+    }
+
+    /* Reset */
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: white;
+    }
+}
+
+.typing-container {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 4px solid white;
+    /* Cursor */
+    width: 0;
+    animation:
+        typing-sequence 36s steps(30, end) infinite,
+        blink-caret .75s step-end infinite;
+}
+
+/* Staggered delays for multi-line typing */
+.typing-line-1 {
+    animation-delay: 0s;
+}
+
+.typing-line-2 {
+    animation-delay: 2s;
+}
+
+/* Starts 2s after line 1 */
+.typing-line-3 {
+    animation-delay: 4s;
+}
+
+/* Starts 2s after line 2 */
+
+/* Starts after line 2 */

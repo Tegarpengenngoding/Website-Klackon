@@ -287,8 +287,8 @@
             <div class="flex flex-col items-center mb-16 relative z-10">
                 <!-- Header Title -->
                 <div class="bg-klackonPink text-white px-10 py-3 transform -rotate-2 shadow-lg mb-0 z-10">
-                    <h2 class="font-heading text-klackon-h2 uppercase tracking-wide drop-shadow-md">Showcasing Our
-                        Work</h2>
+                    <h2 class="font-heading text-klackon-h2 uppercase tracking-wide drop-shadow-md">Showcasing Our Work
+                    </h2>
                 </div>
                 <!-- Subtitle -->
                 <div class="bg-klackonYellow text-klackonBlue px-8 py-2 transform rotate-1 shadow-md mt-2 z-0">
@@ -312,7 +312,7 @@
 
                 <button data-filter="branding"
                     class="px-8 py-2 bg-white text-klackonBlue border-2 border-klackonBlue font-bold rounded-full hover:bg-klackonBlue hover:text-white transition-all text-klackon-body uppercase filter-btn shadow-sm hover:shadow-md">Branding
-                    & Design</button>
+                    &amp; Design</button>
 
                 <button data-filter="immersive-tech"
                     class="px-8 py-2 bg-white text-klackonBlue border-2 border-klackonBlue font-bold rounded-full hover:bg-klackonBlue hover:text-white transition-all text-klackon-body uppercase filter-btn shadow-sm hover:shadow-md">Immersive
@@ -322,10 +322,49 @@
                     class="px-8 py-2 bg-white text-klackonBlue border-2 border-klackonBlue font-bold rounded-full hover:bg-klackonBlue hover:text-white transition-all text-klackon-body uppercase filter-btn shadow-sm hover:shadow-md">Other</button>
             </div>
 
-            <!-- Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="portfolio-grid">
-                <!-- Items will be injected here by JavaScript -->
+            <!-- Portfolio Content Area -->
+            <div class="max-w-6xl mx-auto">
+
+                <!-- Image Grid (shown for ALL button) -->
+                <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
+                    <!-- Items injected by JavaScript -->
+                </div>
+
+                <!-- Canva Embed (shown for 3D Art / Branding & Design) -->
+                <div id="portfolio-embed" class="hidden">
+                    <div class="border-4 border-black shadow-brutal rounded-xl overflow-hidden">
+                        <div id="canva-wrapper" style="position: relative; width: 100%; height: 0; padding-top: 590.7760%;
+                            overflow: hidden; border-radius: 8px; will-change: transform;">
+                            <iframe id="canva-frame" loading="lazy"
+                                style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0;"
+                                src="" allowfullscreen="allowfullscreen" allow="fullscreen">
+                            </iframe>
+                        </div>
+                    </div>
+
+                    <!-- Credit -->
+                    <p class="text-center mt-4 text-klackon-small text-gray-500 font-body">
+                        <a id="canva-credit-link" href="#" target="_blank" rel="noopener"
+                            class="font-bold text-klackonBlue hover:text-klackonPink transition-colors">View on
+                            Canva</a>
+                        by Akhmad Tegar Ramadani
+                    </p>
+                </div>
+
+                <!-- Coming Soon (shown for Social Media / Immersive Tech / Other) -->
+                <div id="coming-soon" class="hidden">
+                    <div
+                        class="border-4 border-black shadow-brutal rounded-xl bg-klackonBlue p-16 flex flex-col items-center gap-6 text-white text-center">
+                        <div class="bg-klackonPink px-8 py-3 transform -rotate-2 border-2 border-black shadow-md">
+                            <span class="font-heading text-klackon-h2 uppercase">Coming Soon</span>
+                        </div>
+                        <p id="coming-soon-label" class="font-body text-klackon-body opacity-80">Portfolio for this
+                            category is being prepared.<br>Stay tuned!</p>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </section>
 
@@ -543,78 +582,106 @@
             window.location.href = `mailto:creative.tegar@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
         });
 
-        // --- DYNAMIC PORTFOLIO RENDERING & FILTERING ---
-        const portfolioGrid = document.getElementById('portfolio-grid');
+        // --- PORTFOLIO FILTER CONTROL ---
+
+        // Canva embed configs (only for categories with Canva presentations)
+        const canvaConfigs = {
+            '3d-art': {
+                src: 'https://www.canva.com/design/DAHD0oZOkMc/mvktLESZYg7mMhBj0yjY8w/view?embed',
+                paddingTop: '238.2138%',
+                label: '3D Art',
+                creditHref: 'https://www.canva.com/design/DAHD0oZOkMc/mvktLESZYg7mMhBj0yjY8w/view?utm_content=DAHD0oZOkMc&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+                creditText: '3D ART'
+            },
+            'branding': {
+                src: 'https://www.canva.com/design/DAHD0Z1BAO4/8wTw4Bc1RTEBMBCBF2HsMQ/view?embed',
+                paddingTop: '590.7760%',
+                label: 'Branding & Design',
+                creditHref: 'https://www.canva.com/design/DAHD0Z1BAO4/8wTw4Bc1RTEBMBCBF2HsMQ/view?utm_content=DAHD0Z1BAO4&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+                creditText: 'Design'
+            }
+        };
+
         const filterBtns = document.querySelectorAll('.filter-btn');
+        const portfolioGrid = document.getElementById('portfolio-grid');
+        const portfolioEmbed = document.getElementById('portfolio-embed');
+        const comingSoon = document.getElementById('coming-soon');
+        const canvaWrapper = document.getElementById('canva-wrapper');
+        const canvaFrame = document.getElementById('canva-frame');
+        const canvaCreditLink = document.getElementById('canva-credit-link');
 
-        // Function to render portfolio items
-        function renderPortfolio(items) {
-            portfolioGrid.innerHTML = ''; // Clear existing
-
-            items.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'aspect-[4/3] bg-white border-4 border-klackonBlue shadow-[8px_8px_0_0_#3355E6] rounded-xl overflow-hidden relative group portfolio-item';
-                itemDiv.setAttribute('data-category', item.category);
-
-                // Image handling: if image is empty, show placeholder with title
-                let contentHTML = '';
-                if (item.image) {
-                    contentHTML = `<img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">`;
-                } else {
-                    // Fallback placeholder style
-                    contentHTML = `
-                        <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                            <span class="font-heading text-gray-300 text-klackon-h3 px-4 text-center">${item.title}</span>
-                        </div>
-                    `;
-                }
-
-                // Add hover overlay with title/link if you want, but sticking to current design for now which is just the item.
-                // We can add the title overlay as per original design if needed? 
-                // The original code had the title inside the gray box.
-
-                itemDiv.innerHTML = contentHTML;
-                portfolioGrid.appendChild(itemDiv);
+        // Render image cards into the grid (skip items with no image)
+        function renderGrid(items) {
+            portfolioGrid.innerHTML = '';
+            items.filter(item => item.image).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-white border-4 border-klackonBlue shadow-[8px_8px_0_0_#3355E6] rounded-xl overflow-hidden';
+                div.innerHTML = `<img src="${item.image}" alt="${item.title}" class="w-full h-auto block">`;
+                portfolioGrid.appendChild(div);
             });
         }
 
-        // Initial Render
-        if (typeof portfolioData !== 'undefined') {
-            renderPortfolio(portfolioData);
-        } else {
-            console.error('Portfolio Data not found!');
+        function showGrid() {
+            portfolioGrid.classList.remove('hidden');
+            portfolioEmbed.classList.add('hidden');
+            comingSoon.classList.add('hidden');
         }
 
-        // Filter Logic
+        function showEmbed(filter) {
+            const cfg = canvaConfigs[filter];
+            portfolioGrid.classList.add('hidden');
+            portfolioEmbed.classList.remove('hidden');
+            comingSoon.classList.add('hidden');
+            canvaWrapper.style.paddingTop = cfg.paddingTop;
+            canvaFrame.src = cfg.src;
+            canvaCreditLink.href = cfg.creditHref;
+            canvaCreditLink.textContent = cfg.creditText;
+        }
+
+        function showComingSoon(category) {
+            portfolioGrid.classList.add('hidden');
+            portfolioEmbed.classList.add('hidden');
+            comingSoon.classList.remove('hidden');
+            document.getElementById('coming-soon-label').textContent =
+                category + ' portfolio is being prepared. Stay tuned!';
+        }
+
+        function setActiveBtn(activeBtn) {
+            filterBtns.forEach(b => {
+                b.classList.remove('bg-klackonBlue', 'text-white');
+                b.classList.add('bg-white', 'text-klackonBlue');
+            });
+            activeBtn.classList.remove('bg-white', 'text-klackonBlue');
+            activeBtn.classList.add('bg-klackonBlue', 'text-white');
+        }
+
+        // Initial render: show ALL → image grid
+        if (typeof portfolioData !== 'undefined') {
+            renderGrid(portfolioData);
+        }
+
+        const comingSoonLabels = {
+            'social-media': 'Social Media',
+            'immersive-tech': 'Immersive Tech',
+            'other': 'Other'
+        };
+
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-klackonBlue', 'text-white');
-                    b.classList.add('bg-white', 'text-klackonBlue');
-                });
+                setActiveBtn(btn);
+                const filter = btn.getAttribute('data-filter');
 
-                // Add active class to clicked button
-                btn.classList.remove('bg-white', 'text-klackonBlue');
-                btn.classList.add('bg-klackonBlue', 'text-white');
-
-                const filterValue = btn.getAttribute('data-filter');
-
-                // Filter data then re-render? Or hide/show?
-                // Re-rendering is cleaner for data updates, but hiding/showing is smoother for animations.
-                // Let's stick to hiding/showing the *rendered* items to match the original behavior and keep it simple.
-
-                const portfolioItems = document.querySelectorAll('.portfolio-item');
-                portfolioItems.forEach(item => {
-                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
-                        item.classList.remove('hidden');
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                });
+                if (filter === 'all') {
+                    showGrid();
+                } else if (canvaConfigs[filter]) {
+                    showEmbed(filter);
+                } else {
+                    showComingSoon(comingSoonLabels[filter] || filter);
+                }
             });
         });
     </script>
+
 </body>
 
 </html>
